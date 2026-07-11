@@ -8,23 +8,22 @@
   </head>
   <body>
     <header class="hero">
-      <div>
-        <p class="eyebrow">Freelance Command Center</p>
-        <h1>自由职业总控台</h1>
-        <p class="subtitle">统一管理自媒体、模特、网店三个方向的时间、现金流和下一步行动。</p>
-      </div>
-      <div class="week-capacity">
-        <label for="weeklyCapacity">本周可用时间（小时）</label>
-        <div class="capacity-input">
-          <input id="weeklyCapacity" type="number" min="0" step="0.5" />
-          <span>小时</span>
-        </div>
-      </div>
+      <p class="eyebrow">Freelance Command Center</p>
+      <h1>自由职业总控台</h1>
+      <p class="subtitle">统一管理自媒体、模特、网店三个方向的时间、现金流和下一步行动。</p>
     </header>
 
     <main>
-      <section class="dashboard-grid" aria-label="核心概览">
-        <article class="card wide">
+      <section class="overview-row" aria-label="本周概览">
+        <article class="card week-capacity">
+          <label for="weeklyCapacity">本周可用时间（小时）</label>
+          <div class="capacity-input">
+            <input id="weeklyCapacity" type="number" min="0" step="0.5" />
+            <span>小时</span>
+          </div>
+        </article>
+
+        <article class="card week-plan-card">
           <div class="section-title">
             <h2>本周时间投入</h2>
             <span id="weekPlanBadge" class="badge">计算中</span>
@@ -32,28 +31,30 @@
           <div id="directionTimeCards" class="direction-time-cards"></div>
           <p id="weekPlanText" class="helper"></p>
         </article>
+      </section>
 
-        <article class="card money-card">
-          <h2>本月现金流</h2>
-          <div class="money-list">
-            <div><span>总收入</span><strong id="monthIncome">¥0</strong></div>
-            <div><span>总支出</span><strong id="monthExpense">¥0</strong></div>
-            <div class="net"><span>净收入</span><strong id="monthNet">¥0</strong></div>
-          </div>
-        </article>
+      <section class="card money-card" aria-label="本月现金流">
+        <h2>本月现金流</h2>
+        <div class="money-list">
+          <div><span>总收入</span><strong id="monthIncome">¥0</strong></div>
+          <div><span>总支出</span><strong id="monthExpense">¥0</strong></div>
+          <div class="net"><span>净收入</span><strong id="monthNet">¥0</strong></div>
+        </div>
+      </section>
 
+      <section class="insight-row" aria-label="项目投入产出概览">
         <article class="card">
           <h2>正在进行</h2>
           <div id="activeProjects" class="active-list"></div>
         </article>
-      </section>
 
-      <section class="card">
-        <div class="section-title">
-          <h2>三个方向投入产出</h2>
-          <p>按当前全部项目统计</p>
-        </div>
-        <div id="roiCards" class="roi-grid"></div>
+        <article class="card">
+          <div class="section-title">
+            <h2>三个方向投入产出</h2>
+            <p>按当前全部项目统计</p>
+          </div>
+          <div id="roiCards" class="roi-grid"></div>
+        </article>
       </section>
 
       <section class="workspace">
