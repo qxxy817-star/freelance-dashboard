@@ -90,6 +90,35 @@ function renderDashboard() {
     const net = income - expense;
     return `<div class="mini-card"><span>${direction}</span><strong class="${net >= 0 ? "positive" : "negative"}">${money(net)}</strong><p class="helper">收入 ${money(income)} / 投入 ${money(expense)} / 实际 ${hours(time)}</p></div>`;
   }).join("");
+
+  renderWeeklyReview(weekProjects, totalPlannedWeek, weeklyCapacity);
+}
+
+function renderWeeklyReview(weekProjects, totalPlannedWeek, weeklyCapacity) {
+  const completed = weekProjects.filter((project) => project.status === "已完成").length;
+  const actualTime = weekProjects.reduce((sum, project) => sum + Number(project.actualHours), 0);
+  const net = weekProjects.reduce((sum, project) => sum + Number(project.income) - Number(project.expense), 0);
+  const usage = weeklyCapacity ? Math.round((totalPlannedWeek / weeklyCapacity) * 100) : 0;
+  const bestDirection = DIRECTIONS.map((direction) => {
+    const list = weekProjects.filter((project) => project.direction === direction);
+    return { direction, net: list.reduce((sum, project) => sum + Number(project.income) - Number(project.expense), 0) };
+  }).sort((a, b) => b.net - a.net)[0];
+  const urgentProject = weekProjects
+    .filter((project) => project.status !== "已完成")
+    .sort((a, b) => a.deadline.localeCompare(b.deadline))[0];
+
+  $("reviewBadge").textContent = weekProjects.length ? `${weekProjects.length} 个本周项目` : "暂无本周项目";
+  $("weeklyReviewCards").innerHTML = [
+    ["完成数", `${completed}/${weekProjects.length}`, `本周计划内项目完成 ${completed} 个`],
+    ["实际投入", hours(actualTime), `计划 ${hours(totalPlannedWeek)} · 占用 ${usage}%`],
+    ["本周净收入", money(net), bestDirection ? `${bestDirection.direction} 当前贡献最高` : "等待新增项目"],
+  ].map(([label, value, helper]) => `<div class="mini-card"><span>${label}</span><strong class="${label === "本周净收入" ? (net >= 0 ? "positive" : "negative") : ""}">${value}</strong><p class="helper">${helper}</p></div>`).join("");
+
+  $("weeklyReviewNotes").innerHTML = [
+    ["继续做", bestDirection && bestDirection.net > 0 ? `优先放大「${bestDirection.direction}」中已验证有回款的动作。` : "保留能带来曝光、作品或现金流的最小行动。"],
+    ["要调整", usage > 100 ? "本周排期已超载，至少顺延一个低收益任务。" : "当前排期可控，可把空余时间留给高杠杆任务。"],
+    ["下周起手", urgentProject ? `先推进「${urgentProject.name}」：${urgentProject.nextAction}` : "选择一个方向设置明确截止日期和下一步行动。"],
+  ].map(([title, text]) => `<div class="review-note"><b>${title}</b><span>${text}</span></div>`).join("");
 }
 
 function renderProjects() {
