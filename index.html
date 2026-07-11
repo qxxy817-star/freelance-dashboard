@@ -3,223 +3,123 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>赛博小熊自由职业总控台</title>
+    <title>赛博小熊个人工作台</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <nav class="top-nav" aria-label="页面导航">
-      <a class="nav-link active" href="#dashboard" data-page-link="dashboard">自由职业总控台</a>
-      <a class="nav-link" href="#time" data-page-link="time">时间管理</a>
+    <nav class="top-nav" aria-label="主页面导航">
+      <a class="nav-link active" href="#today" data-page-link="today">今日</a>
+      <a class="nav-link" href="#time-library" data-page-link="time-library">时间库</a>
+      <a class="nav-link" href="#monthly" data-page-link="monthly">月度记录</a>
+      <a class="nav-link" href="#career" data-page-link="career">事业进程</a>
     </nav>
 
-    <section id="dashboardPage" class="page active" data-page="dashboard">
     <header class="hero">
-      <p class="eyebrow">Freelance Command Center</p>
-      <h1>赛博小熊自由职业总控台</h1>
-      <p class="subtitle">统一管理自媒体、模特、网店三个方向的时间、现金流和下一步行动。</p>
+      <p class="eyebrow">Cyber Bear Personal OS</p>
+      <h1>赛博小熊个人工作台</h1>
+      <p class="subtitle">把「预测时间 → 安排三件事 → 实际执行 → 复盘修正 → 长期推进」串成一个闭环。</p>
     </header>
 
     <main>
-      <section class="overview-row" aria-label="本周概览">
-        <article class="card week-capacity">
-          <label for="weeklyCapacity">本周可用时间（小时）</label>
-          <div class="capacity-input">
-            <input id="weeklyCapacity" type="number" min="0" step="0.5" />
-            <span>小时</span>
-          </div>
+      <section class="dashboard-grid" aria-label="首页总览">
+        <article class="card overview-card">
+          <span>今天</span><strong id="todayCompleted">0 / 3</strong>
+          <p id="todayOverview" class="helper">今日预计 0 小时 · 实际 0 小时</p>
         </article>
-
-        <article class="card week-plan-card">
-          <div class="section-title">
-            <h2>本周时间投入</h2>
-            <span id="weekPlanBadge" class="badge">计算中</span>
-          </div>
-          <div id="directionTimeCards" class="direction-time-cards"></div>
-          <p id="weekPlanText" class="helper"></p>
+        <article class="card overview-card">
+          <span>本月</span><strong id="monthCompleted">0 件</strong>
+          <p id="monthOverview" class="helper">自媒体 0 · 模特 0 · 网店 0</p>
         </article>
-      </section>
-
-      <section class="card money-card" aria-label="本月现金流">
-        <h2>本月现金流</h2>
-        <div class="money-list">
-          <div><span>总收入</span><strong id="monthIncome">¥0</strong></div>
-          <div><span>总支出</span><strong id="monthExpense">¥0</strong></div>
-          <div class="net"><span>净收入</span><strong id="monthNet">¥0</strong></div>
-        </div>
-      </section>
-
-      <section class="insight-row" aria-label="项目投入产出概览">
-        <article class="card">
-          <h2>正在进行</h2>
-          <div id="activeProjects" class="active-list"></div>
+        <article class="card overview-card">
+          <span>三大方向</span><strong id="careerOverview">推进中</strong>
+          <p class="helper">只看自媒体、模特、网店的长期进程。</p>
         </article>
-
-        <article class="card">
-          <div class="section-title">
-            <h2>三个方向投入产出</h2>
-            <p>按当前全部项目统计</p>
-          </div>
-          <div id="roiCards" class="roi-grid"></div>
+        <article class="card overview-card">
+          <span>时间准确度</span><strong id="accuracyOverview">0%</strong>
+          <p id="accuracyHint" class="helper">平均预估偏差等待记录。</p>
         </article>
       </section>
 
-      <section class="card weekly-review" aria-label="每周复盘">
-        <div class="section-title">
-          <div>
-            <h2>每周复盘</h2>
-            <p>自动汇总本周项目结果，帮你决定下周重点。</p>
-          </div>
-          <span id="reviewBadge" class="badge">复盘中</span>
-        </div>
-        <div id="weeklyReviewCards" class="review-grid"></div>
-        <div id="weeklyReviewNotes" class="review-notes"></div>
-      </section>
+      <section id="todayPage" class="page active" data-page="today">
+        <section class="two-column">
+          <article class="card capacity-card">
+            <div class="section-title"><h2>今日日期与容量</h2><span id="overloadBadge" class="badge">可执行</span></div>
+            <div class="today-date" id="todayDateText"></div>
+            <label>今日可用于工作的总时间（小时）<input id="dailyCapacity" type="number" min="0" step="0.25" /></label>
+            <div class="capacity-summary">
+              <div><span>三件事预计耗时</span><strong id="plannedTotal">0 小时</strong></div>
+              <div><span>当前超载</span><strong id="overloadText">0 小时</strong></div>
+            </div>
+          </article>
 
-      <section class="workspace">
-        <form id="projectForm" class="card form-card">
-          <div class="section-title">
-            <h2 id="formTitle">新增项目</h2>
-            <button id="cancelEdit" type="button" class="ghost hidden">取消编辑</button>
-          </div>
-          <div class="form-grid">
-            <label>项目名称<input id="name" required placeholder="例如：小红书账号起号" /></label>
-            <label>所属方向<select id="direction" required></select></label>
-            <label>当前状态<select id="status" required></select></label>
-            <label>预计时间（小时）<input id="plannedHours" type="number" min="0" step="0.5" required /></label>
-            <label>实际时间（小时）<input id="actualHours" type="number" min="0" step="0.5" required /></label>
-            <label>投入金额（元）<input id="expense" type="number" min="0" step="1" required /></label>
-            <label>收入（元）<input id="income" type="number" min="0" step="1" required /></label>
-            <label>精力消耗<select id="energy" required></select></label>
-            <label>截止日期<input id="deadline" type="date" required /></label>
-            <label class="full">下一步行动<input id="nextAction" required placeholder="例如：周三前完成选题脚本" /></label>
-          </div>
-          <button class="primary" type="submit">保存项目</button>
-        </form>
+          <article class="card not-doing-card">
+            <div class="section-title"><h2>明确今天不做什么</h2><p>防止偷偷增加第四件、第五件事。</p></div>
+            <textarea id="notDoing" rows="7" placeholder="例如：不临时开新选题\n不继续调整工作台视觉\n不同时推进三个方向"></textarea>
+          </article>
+        </section>
 
-        <section class="card projects-card">
-          <div class="section-title">
-            <h2>项目清单</h2>
-            <button id="resetDemo" type="button" class="ghost">恢复示例数据</button>
-          </div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>项目</th><th>方向</th><th>状态</th><th>时间</th><th>金额</th><th>精力</th><th>截止</th><th>下一步</th><th>操作</th>
-                </tr>
-              </thead>
-              <tbody id="projectRows"></tbody>
-            </table>
+        <section class="card">
+          <div class="section-title"><h2>今日最重要的三件事</h2><p>固定三张任务卡，不允许增加第四件。</p></div>
+          <div id="todayTasks" class="task-card-grid"></div>
+        </section>
+
+        <section class="card">
+          <div class="section-title"><h2>每日复盘</h2><button id="saveReview" class="primary small" type="button">保存今日复盘</button></div>
+          <div class="review-form">
+            <label>今天实际完成了什么？<textarea id="reviewDone" rows="3"></textarea></label>
+            <label>哪件事比预计更耗时？<textarea id="reviewOvertime" rows="3"></textarea></label>
+            <label>时间为什么出现偏差？<textarea id="reviewReason" rows="3"></textarea></label>
+            <label>今天最大的卡点是什么？<textarea id="reviewBlocker" rows="3"></textarea></label>
+            <label>今天最有效的一步是什么？<textarea id="reviewEffective" rows="3"></textarea></label>
+            <label>今天值得夸自己的地方是什么？<textarea id="reviewPraise" rows="3"></textarea></label>
+            <label>明天最重要的一件事是什么？<textarea id="reviewTomorrow" rows="3"></textarea></label>
           </div>
         </section>
+      </section>
+
+      <section id="timeLibraryPage" class="page" data-page="time-library">
+        <section class="time-library-layout">
+          <form id="timeRecordForm" class="card form-card">
+            <div class="section-title"><h2>单次时间记录</h2><p>完成一件事后快速记录，用来修正下次预估。</p></div>
+            <div class="form-grid">
+              <label>任务名称<input id="recordName" required placeholder="例如：日常化妆" /></label>
+              <label>预计时间（分钟）<input id="recordEstimate" type="number" min="0" step="5" required /></label>
+              <label>实际时间（分钟）<input id="recordActual" type="number" min="0" step="5" required /></label>
+              <label>是否被打断<select id="recordInterrupted"><option>否</option><option>是</option></select></label>
+              <label>超时原因<select id="recordReason"></select></label>
+              <label>下次建议预留时间（分钟）<input id="recordSuggestion" type="number" min="0" step="5" /></label>
+            </div>
+            <button class="primary" type="submit">保存到时间库</button>
+          </form>
+
+          <article class="card">
+            <div class="section-title"><h2>完整占用时间拆解</h2><p>把「去拍摄」拆成前后准备和恢复。</p></div>
+            <div id="shootBreakdown" class="breakdown-list"></div>
+          </article>
+        </section>
+
+        <section class="card">
+          <div class="section-title"><h2>我的生活耗时库</h2><button id="resetDemo" class="ghost" type="button">恢复示例数据</button></div>
+          <div id="timeLibrary" class="library-grid"></div>
+        </section>
+      </section>
+
+      <section id="monthlyPage" class="page" data-page="monthly">
+        <section class="card">
+          <div class="section-title"><div><h2>本月已完成事项</h2><p id="monthlyTitle">2026年7月</p></div><select id="monthFilter"></select></div>
+          <div class="stats-grid" id="monthlyStats"></div>
+          <div class="table-wrap"><table><thead><tr><th>日期</th><th>完成事项</th><th>所属方向</th><th>预计时间</th><th>实际时间</th></tr></thead><tbody id="monthlyRows"></tbody></table></div>
+        </section>
+        <section class="two-column">
+          <article class="card"><div class="section-title"><h2>月度日历</h2><p>点击天数查看当天状态。</p></div><div id="monthCalendar" class="calendar-grid"></div></article>
+          <article class="card"><div class="section-title"><h2>本月复盘</h2><p>月底用数据摘要回答方向问题。</p></div><div id="monthReview" class="review-notes single"></div></article>
+        </section>
+      </section>
+
+      <section id="careerPage" class="page" data-page="career">
+        <section id="careerBoards" class="career-grid"></section>
       </section>
     </main>
-
-      </section>
-
-    <section id="timePage" class="page" data-page="time">
-      <header class="hero">
-        <p class="eyebrow">Time Management System</p>
-        <h1>赛博小熊时间管理后台</h1>
-        <p class="subtitle">从月度计划、每日 3 个最重要任务到每日复盘，持续看见真实产能、低估任务和承诺过量的模式。</p>
-      </header>
-
-      <main>
-        <section class="time-grid" aria-label="时间管理洞察">
-          <article class="card time-score-card">
-            <span class="metric-label">真实日完成能力</span>
-            <strong id="realCapacity">0 件/天</strong>
-            <p id="realCapacityHint" class="helper">完成复盘后自动计算。</p>
-          </article>
-          <article class="card time-score-card">
-            <span class="metric-label">最容易低估</span>
-            <strong id="underestimatedType">等待数据</strong>
-            <p id="underestimatedHint" class="helper">按任务类型比较预计与实际耗时。</p>
-          </article>
-          <article class="card time-score-card">
-            <span class="metric-label">时间去向</span>
-            <strong id="timeFlow">推进 0%</strong>
-            <p id="timeFlowHint" class="helper">区分推进、切换和焦虑。</p>
-          </article>
-        </section>
-
-        <section class="time-workspace">
-          <form id="monthPlanForm" class="card form-card">
-            <div class="section-title">
-              <div>
-                <h2>月度计划</h2>
-                <p>写下本月目标，并拆成可以落到每天的行动。</p>
-              </div>
-            </div>
-            <div class="form-grid">
-              <label>月份<input id="planMonth" type="month" required /></label>
-              <label>目标方向<select id="planDirection" required></select></label>
-              <label class="full">月度目标<input id="monthGoal" required placeholder="例如：完成 12 条短视频并拿到 2 个合作询盘" /></label>
-              <label class="full">可落地的每日行动<input id="dailyAction" required placeholder="例如：每天完成 1 个选题 / 30 分钟拍摄 / 联系 3 个客户" /></label>
-            </div>
-            <button class="primary" type="submit">保存月度计划</button>
-          </form>
-
-          <form id="dailyReviewForm" class="card form-card">
-            <div class="section-title">
-              <div>
-                <h2>每日 3 件事与复盘</h2>
-                <p>记录承诺、完成、估时偏差和当天状态。</p>
-              </div>
-            </div>
-            <div class="form-grid daily-form-grid">
-              <label>日期<input id="reviewDate" type="date" required /></label>
-              <label>当天状态<select id="dayState" required></select></label>
-              <label class="full">最重要任务 1<input id="task1" required placeholder="今天最该推进的事" /></label>
-              <label>类型<select id="taskType1" required></select></label>
-              <label>预计/实际小时<div class="inline-fields"><input id="estimate1" type="number" min="0" step="0.25" required /><input id="actual1" type="number" min="0" step="0.25" required /></div></label>
-              <label class="full">最重要任务 2<input id="task2" required /></label>
-              <label>类型<select id="taskType2" required></select></label>
-              <label>预计/实际小时<div class="inline-fields"><input id="estimate2" type="number" min="0" step="0.25" required /><input id="actual2" type="number" min="0" step="0.25" required /></div></label>
-              <label class="full">最重要任务 3<input id="task3" required /></label>
-              <label>类型<select id="taskType3" required></select></label>
-              <label>预计/实际小时<div class="inline-fields"><input id="estimate3" type="number" min="0" step="0.25" required /><input id="actual3" type="number" min="0" step="0.25" required /></div></label>
-              <label>完成了几件<input id="completedTasks" type="number" min="0" max="3" step="1" required /></label>
-              <label>推进 / 切换 / 焦虑 小时<div class="inline-fields three"><input id="deepHours" type="number" min="0" step="0.25" required /><input id="switchHours" type="number" min="0" step="0.25" required /><input id="anxietyHours" type="number" min="0" step="0.25" required /></div></label>
-              <label class="full">复盘：今天为什么会这样？<input id="reviewNote" required placeholder="低估、打断、状态、临时承诺、焦虑来源……" /></label>
-            </div>
-            <button class="primary" type="submit">保存每日复盘</button>
-          </form>
-        </section>
-
-        <section class="insight-row">
-          <article class="card">
-            <div class="section-title">
-              <h2>月目标是否落到每日行动</h2>
-              <button id="resetTimeDemo" type="button" class="ghost">恢复示例数据</button>
-            </div>
-            <div id="monthPlanList" class="active-list"></div>
-          </article>
-          <article class="card">
-            <div class="section-title">
-              <h2>判断提示</h2>
-              <p>不是 Todo 列表，而是决策反馈。</p>
-            </div>
-            <div id="timeInsights" class="review-notes single-column"></div>
-          </article>
-        </section>
-
-        <section class="card projects-card">
-          <div class="section-title">
-            <h2>每日复盘记录</h2>
-            <p>越多记录，系统越能看出你的真实节奏。</p>
-          </div>
-          <div class="table-wrap">
-            <table class="time-table">
-              <thead>
-                <tr><th>日期</th><th>状态</th><th>3 个重点</th><th>完成</th><th>估时偏差</th><th>时间去向</th><th>复盘</th><th>操作</th></tr>
-              </thead>
-              <tbody id="dailyReviewRows"></tbody>
-            </table>
-          </div>
-        </section>
-      </main>
-    </section>
 
     <footer>数据仅保存在当前浏览器本地（localStorage），无需登录。</footer>
     <script src="app.js"></script>
